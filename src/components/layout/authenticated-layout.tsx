@@ -1,4 +1,3 @@
-import { Outlet } from '@tanstack/react-router'
 import { getCookie } from '@/lib/cookies'
 import { cn } from '@/lib/utils'
 import { LayoutProvider } from '@/context/layout-provider'
@@ -19,7 +18,7 @@ import { NavUser } from './nav-user'
 import { TeamSwitcher } from './team-switcher'
 
 type AuthenticatedLayoutProps = {
-  children?: React.ReactNode
+  children: React.ReactNode
 }
 
 export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
@@ -58,7 +57,7 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
               '@container/content'
             )}
           >
-            {children ?? <Outlet />}
+            {children}
           </SidebarInset>
         </LayoutProvider>
       </SidebarProvider>
