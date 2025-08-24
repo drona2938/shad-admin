@@ -8,7 +8,7 @@ import { DirectionProvider } from '@/context/direction-provider'
 import { FontProvider } from '@/context/font-provider'
 import { ThemeProvider } from '@/context/theme-provider'
 import { QueryClient } from '@/lib/query-client'
-import '@/styles/index.css'
+import './globals.css'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -78,7 +78,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
       <html lang="en" className={`${inter.variable} ${manrope.variable}`}>
         <body>
           <QueryClientProvider client={QueryClient}>
