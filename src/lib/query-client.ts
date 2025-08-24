@@ -1,0 +1,56 @@
+'use client'
+
+import { AxiosError } from 'axios'
+import { QueryClient, QueryCache } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { handleServerError } from '@/lib/handle-server-error'
+
+export const QueryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        // eslint-disable-next-line no-console
+        if (process.env.NODE_ENV === 'development') console.log({ failureCount, error })
+
+        if (failureCount >= 0 && process.env.NODE_ENV === 'development') return false
+        if (failureCount > 3 && process.env.NODE_ENV === 'production') return false
+
+        return !(
+          error instanceof AxiosError &&
+          [401, 403].includes(error.response?.status ?? 0)
+        )
+      },
+      refetchOnWindowFocus: process.env.NODE_ENV === 'production',
+      staleTime: 10 * 1000, // 10s
+    },
+    mutations: {
+      onError: (error) => {
+        handleServerError(error)
+
+        if (error instanceof AxiosError) {
+          if (error.response?.status === 304) {
+            toast.error('Content not modified!')
+          }
+        }
+      },
+    },
+  },
+  queryCache: new QueryCache({
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          toast.error('Session expired!')
+          // Handle auth reset and redirect in Next.js way
+          window.location.href = '/sign-in'
+        }
+        if (error.response?.status === 500) {
+          toast.error('Internal Server Error!')
+          window.location.href = '/500'
+        }
+        if (error.response?.status === 403) {
+          window.location.href = '/403'
+        }
+      }
+    },
+  }),
+})
