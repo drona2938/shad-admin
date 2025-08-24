@@ -1,4 +1,4 @@
-import { useSearch } from '@tanstack/react-router'
+import { useSearchParams } from 'next/navigation'
 import {
   Card,
   CardContent,
