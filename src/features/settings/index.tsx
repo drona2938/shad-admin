@@ -1,4 +1,3 @@
-import { Outlet } from '@tanstack/react-router'
 import { Monitor, Bell, Palette, Wrench, UserCog } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { ConfigDrawer } from '@/components/config-drawer'
@@ -12,7 +11,7 @@ import { SidebarNav } from './components/sidebar-nav'
 const sidebarNavItems = [
   {
     title: 'Profile',
-    href: '/settings',
+    href: '/settings/profile',
     icon: <UserCog size={18} />,
   },
   {
@@ -37,7 +36,11 @@ const sidebarNavItems = [
   },
 ]
 
-export function Settings() {
+type SettingsProps = {
+  children: React.ReactNode
+}
+
+export function Settings({ children }: SettingsProps) {
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -65,7 +68,7 @@ export function Settings() {
             <SidebarNav items={sidebarNavItems} />
           </aside>
           <div className='flex w-full overflow-y-hidden p-1'>
-            <Outlet />
+            {children}
           </div>
         </div>
       </Main>
