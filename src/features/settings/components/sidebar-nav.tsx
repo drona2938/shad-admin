@@ -23,21 +23,21 @@ type SidebarNavProps = React.HTMLAttributes<HTMLElement> & {
 }
 
 export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
-  const { pathname } = useLocation()
-  const navigate = useNavigate()
+  const pathname = usePathname()
+  const router = useRouter()
   const [val, setVal] = useState(pathname ?? '/settings')
 
   const handleSelect = (e: string) => {
     setVal(e)
-    navigate({ to: e })
+    router.push(e)
   }
 
   return (
-    <>
-      <div className='p-1 md:hidden'>
+    <div className='space-y-2'>
+      <div className='block sm:hidden'>
         <Select value={val} onValueChange={handleSelect}>
-          <SelectTrigger className='h-12 sm:w-48'>
-            <SelectValue placeholder='Theme' />
+          <SelectTrigger className='h-12 sm:hidden'>
+            <SelectValue placeholder='Choose an option' />
           </SelectTrigger>
           <SelectContent>
             {items.map((item) => (
@@ -52,36 +52,28 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
         </Select>
       </div>
 
-      <ScrollArea
-        orientation='horizontal'
-        type='always'
-        className='bg-background hidden w-full min-w-40 px-1 py-2 md:block'
-      >
-        <nav
-          className={cn(
-            'flex space-x-2 py-1 lg:flex-col lg:space-y-1 lg:space-x-0',
-            className
-          )}
-          {...props}
-        >
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              to={item.href}
-              className={cn(
-                buttonVariants({ variant: 'ghost' }),
-                pathname === item.href
-                  ? 'bg-muted hover:bg-accent'
-                  : 'hover:bg-accent hover:underline',
-                'justify-start'
-              )}
-            >
-              <span className='me-2'>{item.icon}</span>
-              {item.title}
-            </Link>
-          ))}
-        </nav>
-      </ScrollArea>
-    </>
+      <div className='hidden sm:block'>
+        <ScrollArea className='h-full px-1'>
+          <nav className={cn('flex flex-col gap-2', className)} {...props}>
+            {items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  buttonVariants({ variant: 'ghost' }),
+                  pathname === item.href
+                    ? 'bg-muted hover:bg-muted'
+                    : 'hover:bg-transparent hover:underline',
+                  'justify-start gap-2'
+                )}
+              >
+                {item.icon}
+                {item.title}
+              </Link>
+            ))}
+          </nav>
+        </ScrollArea>
+      </div>
+    </div>
   )
 }
