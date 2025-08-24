@@ -3,9 +3,7 @@ const nextConfig = {
   images: {
     domains: [],
   },
-  experimental: {
-    serverComponentsExternalPackages: [],
-  },
+  serverExternalPackages: [],
   typescript: {
     ignoreBuildErrors: false,
   },
